@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UltraPool — Documentation</title>
+  <style>
+    /* ── Reset & Base ──────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #0d1117;
+      --card:         #161b22;
+      --border:       #30363d;
+      --accent:       #f97316;
+      --accent-dim:   #c2600e;
+      --text:         #e6edf3;
+      --muted:        #8b949e;
+      --code-bg:      #1c2128;
+      --success:      #3fb950;
+      --warning:      #d29922;
+      --danger:       #f85149;
+      --radius:       8px;
+      --radius-lg:    12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Layout ────────────────────────────────────────────────────────────── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section { padding: 56px 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    /* ── Typography ────────────────────────────────────────────────────────── */
+    h1, h2, h3, h4 { font-weight: 600; line-height: 1.3; }
+
+    h2 {
+      font-size: 1.6rem;
+      color: var(--accent);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 1.4em;
+      background: var(--accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    h3 { font-size: 1.1rem; margin-bottom: 10px; color: var(--text); }
+
+    p { margin-bottom: 14px; color: var(--text); }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Header / Hero ─────────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(160deg, #0d1117 0%, #161b22 60%, #1a1f2e 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 0 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -80px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(249,115,22,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero .tagline {
+      font-size: 1.15rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .hero .author {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .hero .author a { color: var(--accent); font-weight: 600; }
+
+    .badges {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+    .badge .dot-orange { background: var(--accent); }
+
+    /* ── Cards ─────────────────────────────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .card h3 {
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .card p { font-size: 0.88rem; color: var(--muted); }
+
+    .card .tag {
+      display: inline-block;
+      background: rgba(249,115,22,0.12);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    /* ── Steps ─────────────────────────────────────────────────────────────── */
+    .steps { display: flex; flex-direction: column; gap: 20px; }
+
+    .step {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .step-num {
+      width: 40px; height: 40px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1rem; color: #fff;
+      flex-shrink: 0;
+    }
+
+    .step-content h3 { margin-bottom: 8px; }
+
+    /* ── Code blocks ────────────────────────────────────────────────────────── */
+    pre, code {
+      font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, "Courier New", monospace;
+      font-size: 0.85rem;
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      overflow-x: auto;
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+
+    code {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 0.82rem;
+      color: #e6edf3;
+    }
+
+    pre code { background: none; border: none; padding: 0; font-size: inherit; }
+
+    .kw  { color: #ff7b72; }  /* keywords   */
+    .fn  { color: #d2a8ff; }  /* functions  */
+    .ty  { color: #79c0ff; }  /* types      */
+    .str { color: #a5d6ff; }  /* strings    */
+    .cm  { color: #8b949e; font-style: italic; }  /* comments */
+    .num { color: #f2cc60; }  /* numbers    */
+    .pp  { color: #f97316; }  /* preprocessor / macro */
+
+    /* ── Tables ─────────────────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    thead tr { background: var(--code-bg); }
+
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--text);
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.025); }
+
+    td code { font-size: 0.8rem; }
+
+    /* ── Details / Collapsibles ─────────────────────────────────────────────── */
+    details {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    details[open] { border-color: var(--accent); }
+
+    summary {
+      cursor: pointer;
+      padding: 14px 20px;
+      font-weight: 600;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      color: var(--text);
+      transition: background 0.15s;
+    }
+
+    summary:hover { background: rgba(249,115,22,0.06); }
+
+    summary::after {
+      content: "›";
+      font-size: 1.2rem;
+      color: var(--accent);
+      transition: transform 0.2s;
+    }
+
+    details[open] summary::after { transform: rotate(90deg); }
+
+    .details-body {
+      padding: 0 20px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .details-body .fn-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .details-body .fn-row:last-child { border-bottom: none; }
+
+    .fn-sig { font-family: "Cascadia Code", "Fira Code", Consolas, monospace; font-size: 0.82rem; color: var(--text); }
+    .fn-desc { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+    .fn-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    .fn-badge.bp  { background: rgba(121,192,255,0.15); color: #79c0ff; }
+    .fn-badge.cpp { background: rgba(210,168,255,0.15); color: #d2a8ff; }
+
+    /* ── Warning / Pitfall Boxes ────────────────────────────────────────────── */
+    .pitfall-grid { display: flex; flex-direction: column; gap: 14px; }
+
+    .pitfall {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--danger);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+
+    .pitfall.warn { border-left-color: var(--warning); }
+    .pitfall.info { border-left-color: #58a6ff; }
+
+    .pitfall-icon { font-size: 1.4rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+
+    .pitfall-body h4 { font-size: 0.95rem; color: var(--text); margin-bottom: 4px; }
+    .pitfall-body p  { font-size: 0.875rem; color: var(--muted); margin: 0; }
+
+    /* ── Architecture Diagram ───────────────────────────────────────────────── */
+    .arch-diagram {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      overflow-x: auto;
+    }
+
+    .arch-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .arch-row + .arch-row { margin-top: 24px; }
+
+    .arch-box {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      font-size: 0.85rem;
+      font-family: "Cascadia Code", Consolas, monospace;
+      color: var(--text);
+      white-space: nowrap;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+
+    .arch-box.primary { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+    .arch-box.secondary { border-color: #58a6ff; color: #79c0ff; }
+    .arch-box.optional { border-color: var(--border); color: var(--muted); border-style: dashed; }
+
+    .arch-box .arch-label {
+      position: absolute;
+      top: -10px; left: 10px;
+      background: var(--code-bg);
+      font-size: 0.65rem;
+      color: var(--muted);
+      padding: 0 6px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: inherit;
+    }
+
+    .arch-arrow {
+      color: var(--muted);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .arch-sub {
+      margin-top: 16px;
+      margin-left: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .arch-sub-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .arch-indent {
+      width: 2px;
+      background: var(--border);
+      border-radius: 2px;
+      align-self: stretch;
+      margin-right: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ── Nav bar ────────────────────────────────────────────────────────────── */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,17,23,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+      overflow-x: auto;
+    }
+
+    .nav-inner a {
+      padding: 14px 12px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      white-space: nowrap;
+      transition: color 0.15s;
+      border-bottom: 2px solid transparent;
+    }
+
+    .nav-inner a:hover { color: var(--text); text-decoration: none; border-bottom-color: var(--accent); }
+
+    /* ── Footer ─────────────────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer a { color: var(--accent); }
+
+    /* ── Utility ─────────────────────────────────────────────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    .muted { color: var(--muted); }
+    .accent { color: var(--accent); }
+    .mono { font-family: "Cascadia Code", Consolas, monospace; }
+
+    .mt-16 { margin-top: 16px; }
+    .mt-24 { margin-top: 24px; }
+    .mt-32 { margin-top: 32px; }
+
+    .default-true  { color: var(--success); font-weight: 600; }
+    .default-false { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════════════════════════════ -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="#quickstart">Quick Start</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#api">API Reference</a>
+    <a href="#config">FPoolConfig</a>
+    <a href="#interface">IPoolableInterface</a>
+    <a href="#growth">Growth Policies</a>
+    <a href="#selection">Selection Policies</a>
+    <a href="#pitfalls">Pitfalls</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ═════════════════════════════════════════════════════════════════ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">v1.0</div>
+    <h1><span>Ultra</span>Pool</h1>
+    <p class="tagline">High-Performance Actor Pooling System for Unreal Engine 5</p>
+    <p class="author">
+      by <a href="https://www.youtube.com/@UnrealExplorerFR" target="_blank">Théo de Nanassy</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.youtube.com/@UnrealExplorerFR" target="_blank">@UnrealExplorerFR</a>
+    </p>
+    <div class="badges">
+      <span class="badge"><span class="dot"></span>UE5 Compatible</span>
+      <span class="badge"><span class="dot dot-orange"></span>Blueprint &amp; C++</span>
+      <span class="badge"><span class="dot"></span>World Subsystem</span>
+      <span class="badge"><span class="dot dot-orange"></span>Zero Manual Setup</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ QUICK START ══════════════════════════════════════════════════════════ -->
+<section id="quickstart">
+  <div class="container">
+    <h2>Quick Start</h2>
+    <p class="muted" style="margin-bottom:32px;">Three steps to go from zero to pooling — works identically in Blueprint and C++.</p>
+
+    <div class="steps">
+
+      <!-- Step 1 -->
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Register the pool</h3>
+          <p class="muted">Call this once — at level start, in a Game Mode, or a Begin Play event. Subsequent calls with the same class/tag are safe no-ops.</p>
+          <p class="muted" style="font-size:0.82rem;">Blueprint node: <code>UltraPool Register Pool</code></p>
+          <pre><code><span class="cm">// C++ — call from BeginPlay or Initialize</span>
+<span class="ty">UUltraPoolSubsystem</span>* Pool = <span class="ty">UUltraPoolSubsystem</span>::<span class="fn">Get</span>(<span class="kw">this</span>);
+
+<span class="ty">FPoolConfig</span> Config;
+Config.ActorClass           = <span class="ty">ABullet</span>::<span class="fn">StaticClass</span>();
+Config.InitialSize          = <span class="num">50</span>;
+Config.MaxSize              = <span class="num">200</span>;
+Config.GrowthPolicy         = <span class="ty">EPoolGrowthPolicy</span>::OnDemand;
+Config.DefaultLeaseDuration = <span class="num">5.0f</span>;  <span class="cm">// auto-return after 5 s</span>
+Config.PoolTag              = <span class="str">FName("Bullet")</span>;
+
+<span class="ty">int32</span> PoolID = Pool-&gt;<span class="fn">RegisterPool</span>(Config);</code></pre>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Acquire an actor</h3>
+          <p class="muted">The actor is unhidden, teleported to your transform, and ready to use. Always check <code>bSuccess</code> — Fixed-policy pools can be exhausted.</p>
+          <p class="muted" style="font-size:0.82rem;">Blueprint node: <code>UltraPool Acquire</code> &nbsp;/&nbsp; <code>UltraPool Acquire By Tag</code></p>
+          <pre><code><span class="kw">bool</span>  bSuccess;
+<span class="ty">AActor</span>* BulletActor;
+
+<span class="ty">FPooledActorHandle</span> Handle = Pool-&gt;<span class="fn">AcquireActor</span>(PoolID, MuzzleTransform);
+
+<span class="cm">// Or by tag — no PoolID needed</span>
+Handle = Pool-&gt;<span class="fn">AcquireActorByTag</span>(<span class="str">FName("Bullet")</span>, MuzzleTransform);
+
+<span class="kw">if</span> (Handle.<span class="fn">IsValidHandle</span>())
+{
+    BulletActor = Pool-&gt;<span class="fn">GetActorFromHandle</span>(Handle);
+    <span class="cm">// BulletActor is live and visible — treat it like a freshly spawned actor</span>
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Return the actor</h3>
+          <p class="muted">The actor is hidden, collision disabled, and moved below the world — ready for the next caller.</p>
+          <p class="muted" style="font-size:0.82rem;">Blueprint node: <code>UltraPool Return</code></p>
+          <pre><code><span class="cm">// Always return via handle — O(1) and stale-safe</span>
+Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
+
+<span class="cm">// Handle is now stale — any further calls using it are safe no-ops</span></code></pre>
+
+          <div class="pitfall warn mt-16" style="margin-top:16px;">
+            <div class="pitfall-icon">&#9888;</div>
+            <div class="pitfall-body">
+              <h4>Never call <code>Destroy()</code> on pooled actors</h4>
+              <p>Calling <code>Destroy()</code> removes the actor from the pool permanently. Always call <code>UltraPool Return</code> / <code>ReturnActor</code> instead. If the actor has a <code>UUltraPoolComponent</code>, use <code>ForceReturn()</code>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ ARCHITECTURE ══════════════════════════════════════════════════════════ -->
+<section id="architecture">
+  <div class="container">
+    <h2>Architecture</h2>
+    <p class="muted" style="margin-bottom:28px;">UltraPool is a <strong>UTickableWorldSubsystem</strong> — one instance per UWorld, created automatically, no manual lifecycle management needed.</p>
+
+    <div class="arch-diagram">
+
+      <!-- Top level: Subsystem -->
+      <div class="arch-row">
+        <div class="arch-box primary">
+          <span class="arch-label">Core</span>
+          UUltraPoolSubsystem
+        </div>
+        <div class="arch-arrow">──owns──&gt;</div>
+        <div class="arch-box secondary">
+          <span class="arch-label">Per-pool</span>
+          TMap&lt;int32, FUltraPoolData&gt;
+        </div>
+      </div>
+
+      <!-- FUltraPoolData internals -->
+      <div class="arch-sub">
+        <div class="arch-sub-row">
+          <div class="arch-indent"></div>
+          <div class="arch-arrow" style="color:var(--border);">&#x251C;──</div>
+          <div class="arch-box secondary">TArray&lt;FUltraPoolSlot&gt;</div>
+          <div class="arch-arrow">──</div>
+          <div class="arch-box" style="border-color:#3fb950;color:#3fb950;">Actor + Generation + LeaseTime</div>
+        </div>
+        <div class="arch-sub-row">
+          <div class="arch-indent"></div>
+          <div class="arch-arrow" style="color:var(--border);">&#x251C;──</div>
+          <div class="arch-box secondary">FUltraPoolFreeList</div>
+          <div class="arch-arrow">──</div>
+          <div class="arch-box" style="border-color:#3fb950;color:#3fb950;">LIFO / FIFO / LeastUsed / MostUsed</div>
+        </div>
+        <div class="arch-sub-row">
+          <div class="arch-indent"></div>
+          <div class="arch-arrow" style="color:var(--border);">&#x2514;──</div>
+          <div class="arch-box secondary">TMap&lt;AActor*, int32&gt;</div>
+          <div class="arch-arrow">──</div>
+          <div class="arch-box" style="border-color:#3fb950;color:#3fb950;">Reverse lookup (ReturnByPointer)</div>
+        </div>
+      </div>
+
+      <!-- Optional additions -->
+      <div class="arch-row" style="margin-top:28px; padding-top:24px; border-top:1px solid var(--border);">
+        <div class="arch-box optional">
+          <span class="arch-label">Optional</span>
+          UUltraPoolComponent
+        </div>
+        <div class="arch-arrow">──delegates──&gt;</div>
+        <div class="arch-box" style="font-size:0.78rem; color:var(--muted); border-color:var(--border);">OnAcquired / OnReturned<br>ForceReturn / ExtendLease</div>
+      </div>
+
+      <div class="arch-row" style="margin-top:16px;">
+        <div class="arch-box optional">
+          <span class="arch-label">Optional</span>
+          IPoolableInterface
+        </div>
+        <div class="arch-arrow">──callbacks──&gt;</div>
+        <div class="arch-box" style="font-size:0.78rem; color:var(--muted); border-color:var(--border);">OnPoolWarmup<br>OnAcquiredFromPool<br>OnReturnedToPool<br>CanBeReclaimed</div>
+      </div>
+
+      <!-- Lookup indices -->
+      <div class="arch-row" style="margin-top:28px; padding-top:24px; border-top:1px solid var(--border);">
+        <div class="arch-box" style="border-color:var(--accent);color:var(--accent);">ClassToPoolID</div>
+        <div class="arch-arrow">+</div>
+        <div class="arch-box" style="border-color:var(--accent);color:var(--accent);">TagToPoolID</div>
+        <div class="arch-arrow">+</div>
+        <div class="arch-box" style="border-color:var(--accent);color:var(--accent);">ActorToPoolID</div>
+        <div class="arch-arrow">─&gt;</div>
+        <div class="arch-box" style="font-size:0.8rem;color:var(--muted);border-color:var(--border);">Fast AcquireByClass<br>AcquireByTag<br>ReturnByPointer</div>
+      </div>
+
+    </div>
+
+    <div class="two-col mt-32">
+      <div class="card">
+        <h3>FPooledActorHandle</h3>
+        <p>Lightweight value type (safe to store in Blueprint). Embeds <code>PoolID</code>, <code>ActorIndex</code>, and <code>Generation</code>. Stale handles (from returned actors) are automatically detected via the generation counter — all API calls with stale handles are silent no-ops.</p>
+      </div>
+      <div class="card">
+        <h3>Generation Counter</h3>
+        <p>Every time a slot is returned, its <code>Generation</code> increments. Any outstanding handle for that slot carries the old generation number and is immediately invalid. This prevents double-return bugs and use-after-return access without any runtime overhead beyond an integer compare.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ API REFERENCE ═════════════════════════════════════════════════════════ -->
+<section id="api">
+  <div class="container">
+    <h2>API Reference</h2>
+    <p class="muted" style="margin-bottom:24px;">
+      All functions are available in Blueprint via <code>UUltraPoolBlueprintLibrary</code> (node prefix: <strong>UltraPool …</strong>) and in C++ via <code>UUltraPoolSubsystem::Get(this)</code>.
+    </p>
+
+    <!-- Registration -->
+    <details open>
+      <summary>Registration</summary>
+      <div class="details-body">
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="ty">int32</span> <span class="fn">RegisterPool</span>(<span class="ty">FPoolConfig</span> Config)</div>
+            <div class="fn-desc">Register an actor class for pooling. Idempotent — calling twice with the same class+tag returns the existing PoolID. Automatically warms up if <code>InitialSize &gt; 0</code>.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="kw">void</span> <span class="fn">DeregisterPool</span>(<span class="ty">int32</span> PoolID, <span class="kw">bool</span> bDestroyActors)</div>
+            <div class="fn-desc">Unregister a pool. Pass <code>bDestroyActors = true</code> to immediately destroy all managed actors.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="kw">void</span> <span class="fn">WarmUpPool</span>(<span class="ty">int32</span> PoolID)</div>
+            <div class="fn-desc">Pre-spawn all <code>InitialSize</code> actors immediately. No-op if already warmed up. Call before gameplay to avoid hitches.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="kw">void</span> <span class="fn">WarmUpAllPools</span>()</div>
+            <div class="fn-desc">Warm up every registered pool. Useful at level-start in a Loading Screen phase.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+      </div>
+    </details>
+
+    <!-- Acquire -->
+    <details>
+      <summary>Acquire</summary>
+      <div class="details-body">
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="ty">FPooledActorHandle</span> <span class="fn">AcquireActor</span>(<span class="ty">int32</span> PoolID, <span class="kw">const</span> <span class="ty">FTransform</span>&amp; SpawnTransform)</div>
+            <div class="fn-desc">Fastest path. Use when you have cached the PoolID at startup. Returns an invalid handle on pool miss.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="ty">FPooledActorHandle</span> <span class="fn">AcquireActorByClass</span>(<span class="ty">TSubclassOf&lt;AActor&gt;</span>, <span class="kw">const</span> <span class="ty">FTransform</span>&amp;)</div>
+            <div class="fn-desc">Lookup by actor class. One extra map lookup vs AcquireActor — fine outside the hot path. Only matches pools registered without a tag.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="ty">FPooledActorHandle</span> <span class="fn">AcquireActorByTag</span>(<span class="ty">FName</span> PoolTag, <span class="kw">const</span> <span class="ty">FTransform</span>&amp;)</div>
+            <div class="fn-desc">Lookup by the <code>FPoolConfig.PoolTag</code> string. Useful when multiple pools share the same actor class but serve different purposes.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+      </div>
+    </details>
+
+    <!-- Return -->
+    <details>
+      <summary>Return</summary>
+      <div class="details-body">
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="kw">void</span> <span class="fn">ReturnActor</span>(<span class="ty">FPooledActorHandle</span> Handle)</div>
+            <div class="fn-desc">Return by handle — O(1), stale-safe. Preferred. Calls <code>OnReturnedToPool</code>, hides actor, increments generation.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="kw">void</span> <span class="fn">ReturnActorByPointer</span>(<span class="ty">AActor</span>* Actor)</div>
+            <div class="fn-desc">Return using a direct pointer (two map lookups). Use when you don't have the handle available — e.g. from a collision event callback.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="kw">void</span> <span class="fn">ReturnAllActors</span>(<span class="ty">int32</span> PoolID)</div>
+            <div class="fn-desc">Return every active actor in a specific pool. Useful on wave end or level transition.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="kw">void</span> <span class="fn">ReturnAllActorsGlobal</span>()</div>
+            <div class="fn-desc">Return every active actor across all registered pools.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="kw">void</span> <span class="fn">ExtendLease</span>(<span class="ty">FPooledActorHandle</span> Handle, <span class="kw">float</span> ExtraSeconds)</div>
+            <div class="fn-desc">Push back the auto-return expiry time. No-op if the lease has no expiry (<code>DefaultLeaseDuration == 0</code>).</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+      </div>
+    </details>
+
+    <!-- Stats -->
+    <details>
+      <summary>Stats</summary>
+      <div class="details-body">
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="ty">FPoolRuntimeStats</span> <span class="fn">GetPoolStats</span>(<span class="ty">int32</span> PoolID)</div>
+            <div class="fn-desc">Snapshot of one pool: total size, active count, miss count, average lease time, peak active count, etc. Safe to read in Blueprint.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="ty">FGlobalPoolStats</span> <span class="fn">GetGlobalStats</span>()</div>
+            <div class="fn-desc">Aggregate across all pools. Includes per-pool breakdown array, system uptime, total misses, total actors managed.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+      </div>
+    </details>
+
+    <!-- Utility -->
+    <details>
+      <summary>Utility</summary>
+      <div class="details-body">
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="ty">FPoolConfig</span> <span class="fn">UltraPool_MakeConfig</span>(<span class="ty">TSubclassOf&lt;AActor&gt;</span>, InitialSize, MaxSize, LeaseDuration, GrowthPolicy, Tag)</div>
+            <div class="fn-desc">Pure convenience node. Sets sensible defaults so you only override what you need.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="ty">int32</span> <span class="fn">ComputePoolID</span>(<span class="ty">TSubclassOf&lt;AActor&gt;</span> ActorClass, <span class="ty">FName</span> Tag)</div>
+            <div class="fn-desc">Deterministic, stable ID from class + tag. Cache this at startup to skip tag-string lookups on the hot path.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="kw">bool</span> <span class="fn">IsHandleValid</span>(<span class="ty">FPooledActorHandle</span> Handle)</div>
+            <div class="fn-desc">Full validation: checks the handle flag, pool existence, slot bounds, and generation match. Pure — no world context needed.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+        <div class="fn-row">
+          <div>
+            <div class="fn-sig"><span class="ty">AActor</span>* <span class="fn">GetActorFromHandle</span>(<span class="ty">FPooledActorHandle</span> Handle)</div>
+            <div class="fn-desc">Resolve a handle to its actor pointer. Returns null if the handle is stale or the actor was GC'd.</div>
+          </div>
+          <span class="fn-badge bp">Blueprint</span>
+        </div>
+
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- ══ FPOOLCONFIG REFERENCE ═════════════════════════════════════════════════ -->
+<section id="config">
+  <div class="container">
+    <h2>FPoolConfig Reference</h2>
+    <p class="muted" style="margin-bottom:20px;">All fields are exposed to Blueprint via the <code>UltraPool Make Config</code> node or the Project Settings panel.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>ActorClass</code></td>
+            <td><code>TSubclassOf&lt;AActor&gt;</code></td>
+            <td class="muted">—</td>
+            <td>The actor class this pool manages. Required.</td>
+          </tr>
+          <tr>
+            <td><code>InitialSize</code></td>
+            <td><code>int32</code></td>
+            <td><code>10</code></td>
+            <td>Actors pre-spawned during WarmUp. Set to 0 to skip warmup and grow lazily.</td>
+          </tr>
+          <tr>
+            <td><code>MaxSize</code></td>
+            <td><code>int32</code></td>
+            <td><code>0</code></td>
+            <td>Hard ceiling on total actors. <code>0</code> = unlimited. Use with caution on the Doubling policy.</td>
+          </tr>
+          <tr>
+            <td><code>DefaultLeaseDuration</code></td>
+            <td><code>float</code></td>
+            <td><code>0.0</code></td>
+            <td>Seconds before auto-return. <code>0</code> = no expiry. Requires <code>bAutoReturnOnLeaseExpiry = true</code>.</td>
+          </tr>
+          <tr>
+            <td><code>GrowthPolicy</code></td>
+            <td><code>EPoolGrowthPolicy</code></td>
+            <td><code>OnDemand</code></td>
+            <td>How the pool grows when all slots are leased. See Growth Policies section.</td>
+          </tr>
+          <tr>
+            <td><code>GrowthIncrement</code></td>
+            <td><code>int32</code></td>
+            <td><code>5</code></td>
+            <td>Actors added per miss when using the Elastic policy. Ignored by other policies.</td>
+          </tr>
+          <tr>
+            <td><code>Priority</code></td>
+            <td><code>EPoolPriority</code></td>
+            <td><code>Normal</code></td>
+            <td>Trim priority. Critical pools are never auto-trimmed; Background pools are trimmed first under memory pressure.</td>
+          </tr>
+          <tr>
+            <td><code>PoolTag</code></td>
+            <td><code>FName</code></td>
+            <td><code>None</code></td>
+            <td>Logical name for <code>AcquireByTag</code> lookups. Leave <code>None</code> for class-only lookup.</td>
+          </tr>
+          <tr>
+            <td><code>bAutoReturnOnLeaseExpiry</code></td>
+            <td><code>bool</code></td>
+            <td class="default-true">true</td>
+            <td>Subsystem auto-returns actors when <code>DefaultLeaseDuration</code> elapses. Disable only for manual lease management.</td>
+          </tr>
+          <tr>
+            <td><code>bResetTransformOnReturn</code></td>
+            <td><code>bool</code></td>
+            <td class="default-true">true</td>
+            <td>Teleport the actor 100,000 units below the world on return, preventing visual pop-in if briefly visible.</td>
+          </tr>
+          <tr>
+            <td><code>bDisableCollisionOnReturn</code></td>
+            <td><code>bool</code></td>
+            <td class="default-true">true</td>
+            <td>Disable all collision on return. Re-enabled automatically on acquire.</td>
+          </tr>
+          <tr>
+            <td><code>bDisableTickOnReturn</code></td>
+            <td><code>bool</code></td>
+            <td class="default-true">true</td>
+            <td>Disable actor Tick on return to avoid wasted CPU on dormant actors.</td>
+          </tr>
+          <tr>
+            <td><code>TrimIdleAfterSeconds</code></td>
+            <td><code>float</code></td>
+            <td><code>0.0</code></td>
+            <td>Auto-shrink the pool when all actors have been idle for this many seconds. <code>0</code> = never trim automatically.</td>
+          </tr>
+          <tr>
+            <td><code>TrimTargetCount</code></td>
+            <td><code>int32</code></td>
+            <td><code>0</code></td>
+            <td>Target slot count after auto-trim. <code>0</code> = trim to the current number of active leases.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ IPOOLABLEINTERFACE ════════════════════════════════════════════════════ -->
+<section id="interface">
+  <div class="container">
+    <h2>IPoolableInterface</h2>
+    <p class="muted" style="margin-bottom:20px;">
+      An optional Blueprint/C++ interface your actor can implement to hook into pool lifecycle events.
+      It is never required — any <code>AActor</code> subclass can be pooled without modification.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Equivalent to</th>
+            <th>When to use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>OnPoolWarmup</code></td>
+            <td>Constructor / CDO init</td>
+            <td>Called <strong>once</strong> at initial spawn, before any lease. Pre-load heavy assets, initialize meshes, cache component references here.</td>
+          </tr>
+          <tr>
+            <td><code>OnAcquiredFromPool</code></td>
+            <td>BeginPlay (per use)</td>
+            <td>Called <strong>every time</strong> the actor leaves the pool. Reset state, restart Niagara systems, re-apply materials, reset AI controller here.</td>
+          </tr>
+          <tr>
+            <td><code>OnReturnedToPool</code></td>
+            <td>EndPlay (per use)</td>
+            <td>Called <strong>every time</strong> the actor is returned. Stop sounds, deactivate particles, cancel timers, unbind delegates here.</td>
+          </tr>
+          <tr>
+            <td><code>CanBeReclaimed</code></td>
+            <td>—</td>
+            <td>Return <code>false</code> to prevent forced reclaim (e.g. actor is mid-cutscene or in a critical gameplay moment). Default: <code>true</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-24">
+      <pre><code><span class="cm">// Minimal C++ implementation</span>
+<span class="kw">class</span> <span class="ty">ABulletActor</span> : <span class="kw">public</span> <span class="ty">AActor</span>, <span class="kw">public</span> <span class="ty">IPoolableInterface</span>
+{
+    <span class="pp">GENERATED_BODY</span>()
+
+<span class="kw">public</span>:
+    <span class="kw">virtual void</span> <span class="fn">OnAcquiredFromPool_Implementation</span>(<span class="ty">FPooledActorHandle</span> Handle) <span class="kw">override</span>
+    {
+        <span class="cm">// Reset velocity, restart trail, etc.</span>
+        ProjectileMovement-&gt;Velocity = <span class="ty">FVector</span>::ZeroVector;
+        TrailSystem-&gt;<span class="fn">Activate</span>(<span class="kw">true</span>);
+    }
+
+    <span class="kw">virtual void</span> <span class="fn">OnReturnedToPool_Implementation</span>(<span class="ty">EPoolReturnReason</span> Reason) <span class="kw">override</span>
+    {
+        TrailSystem-&gt;<span class="fn">Deactivate</span>();
+        <span class="fn">GetWorldTimerManager</span>().<span class="fn">ClearAllTimersForObject</span>(<span class="kw">this</span>);
+    }
+};</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GROWTH POLICIES ═══════════════════════════════════════════════════════ -->
+<section id="growth">
+  <div class="container">
+    <h2>Growth Policies</h2>
+    <p class="muted" style="margin-bottom:24px;">Applied when all slots are leased and a new Acquire call arrives.</p>
+
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="tag">Fixed</div>
+        <h3>Fixed</h3>
+        <p>Never grows. Returns an invalid handle on miss. Best for tightly budgeted pools (e.g. limited power-ups). Forces you to handle misses explicitly.</p>
+        <p style="font-size:0.8rem;margin-top:10px;color:var(--muted);">Spawn cost: <strong style="color:var(--success);">Zero</strong> at runtime</p>
+      </div>
+
+      <div class="card">
+        <div class="tag">OnDemand</div>
+        <h3>On Demand</h3>
+        <p>Spawns exactly <strong>+1</strong> actor per miss. Predictable growth. Best general-purpose policy for most pools. Small per-miss hitch — acceptable in most scenarios.</p>
+        <p style="font-size:0.8rem;margin-top:10px;color:var(--muted);">Spawn cost: <strong style="color:var(--warning);">1× on miss</strong></p>
+      </div>
+
+      <div class="card">
+        <div class="tag">Elastic</div>
+        <h3>Elastic</h3>
+        <p>Spawns <strong>+N</strong> actors per miss (configurable via <code>GrowthIncrement</code>). Amortizes spawn cost when you expect burst demand. Good for wave-based combat.</p>
+        <p style="font-size:0.8rem;margin-top:10px;color:var(--muted);">Spawn cost: <strong style="color:var(--warning);">N× on miss</strong></p>
+      </div>
+
+      <div class="card">
+        <div class="tag">Doubling</div>
+        <h3>Doubling</h3>
+        <p>Doubles the pool size on each miss (<code>currentSize × 2</code>). Maximum throughput growth. Capped at 10,000 actors. Use carefully — can cause large memory spikes.</p>
+        <p style="font-size:0.8rem;margin-top:10px;color:var(--muted);">Spawn cost: <strong style="color:var(--danger);">2× current on miss</strong></p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ SLOT SELECTION POLICIES ═══════════════════════════════════════════════ -->
+<section id="selection">
+  <div class="container">
+    <h2>Slot Selection Policies</h2>
+    <p class="muted" style="margin-bottom:20px;">
+      Controls which available slot is chosen on each Acquire. Set globally in <strong>Project Settings &rarr; Plugins &rarr; UltraPool</strong>.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Policy</th>
+            <th>Strategy</th>
+            <th>Best for</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>LIFO</code></td>
+            <td>Last returned = first acquired</td>
+            <td>Best CPU cache locality. Most recently used actors are likely still warm in L1/L2. <strong>Default.</strong></td>
+            <td>O(1)</td>
+          </tr>
+          <tr>
+            <td><code>FIFO</code></td>
+            <td>First returned = first acquired</td>
+            <td>Even distribution across all pool slots. Useful when actors have cool-down behavior that needs time to reset.</td>
+            <td>O(1)</td>
+          </tr>
+          <tr>
+            <td><code>LeastUsed</code></td>
+            <td>Lowest AcquireCount wins</td>
+            <td>Wear leveling — spreads usage evenly across all actors. Useful when per-actor state accumulates over time (e.g. mesh damage decals).</td>
+            <td>O(N free)</td>
+          </tr>
+          <tr>
+            <td><code>MostUsed</code></td>
+            <td>Highest AcquireCount wins</td>
+            <td>Hot-cache bias — keeps the same actors cycling through repeatedly. Best when initialization is expensive and you want a warm subset.</td>
+            <td>O(N free)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMMON PITFALLS ═══════════════════════════════════════════════════════ -->
+<section id="pitfalls">
+  <div class="container">
+    <h2>Common Pitfalls</h2>
+
+    <div class="pitfall-grid">
+
+      <div class="pitfall">
+        <div class="pitfall-icon">&#128683;</div>
+        <div class="pitfall-body">
+          <h4>Never call <code>Destroy()</code> on a pooled actor</h4>
+          <p>Calling <code>Destroy()</code> permanently removes the actor from the pool, bloating memory over time. Always call <code>UltraPool Return</code> (Blueprint) or <code>ReturnActor(Handle)</code> (C++) instead. If the actor has a <code>UUltraPoolComponent</code>, call <code>ForceReturn()</code> from any Blueprint event.</p>
+        </div>
+      </div>
+
+      <div class="pitfall warn">
+        <div class="pitfall-icon">&#9888;</div>
+        <div class="pitfall-body">
+          <h4>VFX / Niagara systems must be restarted in <code>OnAcquiredFromPool</code></h4>
+          <p>Niagara and Cascade particle systems do <em>not</em> automatically restart when an actor is re-activated. Call <code>Activate(true)</code> (with <code>bReset = true</code>) on your particle components inside <code>OnAcquiredFromPool</code>. Forgetting this is the most common visual bug reported by UltraPool users.</p>
+        </div>
+      </div>
+
+      <div class="pitfall info">
+        <div class="pitfall-icon">&#8505;</div>
+        <div class="pitfall-body">
+          <h4>Returned actors stay visible in the World Outliner — that's normal</h4>
+          <p>Pooled actors are never removed from the World. They are hidden (<code>bHidden = true</code>), moved far below the level, and have their collision and tick disabled. They will appear in the Outliner with names like <code>BP_Bullet_C_0</code>. This is by design — the whole point of pooling is to avoid the cost of creation and destruction.</p>
+        </div>
+      </div>
+
+      <div class="pitfall warn">
+        <div class="pitfall-icon">&#9888;</div>
+        <div class="pitfall-body">
+          <h4><code>bAutoReturnOnLeaseExpiry</code> is <code>true</code> by default</h4>
+          <p>If you set a <code>DefaultLeaseDuration</code>, the subsystem will automatically call <code>ReturnActor</code> when the time expires — even if the actor is still visible. If your gameplay logic needs to extend the lease, call <code>ExtendLease(Handle, ExtraSeconds)</code> before expiry. To disable auto-return entirely, set <code>bAutoReturnOnLeaseExpiry = false</code> in the config.</p>
+        </div>
+      </div>
+
+      <div class="pitfall warn">
+        <div class="pitfall-icon">&#9888;</div>
+        <div class="pitfall-body">
+          <h4>Do not store raw <code>AActor*</code> pointers from a pooled actor across frames</h4>
+          <p>The pool reuses actor pointers. If you cache <code>MyBullet = AcquiredActor</code> and the lease expires and the slot is given to another caller, your pointer still points to a valid actor — but a different one. Always validate via <code>IsHandleValid(Handle)</code> and resolve with <code>GetActorFromHandle(Handle)</code> when needed across frames.</p>
+        </div>
+      </div>
+
+      <div class="pitfall info">
+        <div class="pitfall-icon">&#8505;</div>
+        <div class="pitfall-body">
+          <h4>Blueprint Construction Scripts reset <code>bHidden</code></h4>
+          <p>UltraPool calls <code>SetActorHiddenInGame(true)</code> <em>after</em> <code>FinishSpawning</code> for exactly this reason. If your Blueprint actor's Construction Script explicitly sets <code>Hidden in Game = false</code>, UltraPool's post-spawn call will correctly override it. Do <em>not</em> call <code>SetActorHiddenInGame</code> inside the Construction Script — use <code>OnPoolWarmup</code> instead.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <p style="margin-bottom:8px;">
+      <strong style="color:var(--accent);">UltraPool</strong> &nbsp;&mdash;&nbsp;
+      Copyright &copy; 2025 Théo de Nanassy. All rights reserved.
+    </p>
+    <p>
+      Distributed via <a href="https://www.fab.com" target="_blank">Fab</a>.
+      Unauthorized redistribution is prohibited.
+      &nbsp;&bull;&nbsp;
+      YouTube: <a href="https://www.youtube.com/@UnrealExplorerFR" target="_blank">@UnrealExplorerFR</a>
+    </p>
+    <p style="margin-top:16px; color:var(--border); font-size:0.78rem;">
+      Documentation generated for UltraPool v1.0
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
