@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UltraPool — Documentation</title>
+  <title>UltraPool Documentation</title>
   <style>
     /* ── Reset & Base ──────────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -571,7 +571,7 @@
 <section id="quickstart">
   <div class="container">
     <h2>Quick Start</h2>
-    <p class="muted" style="margin-bottom:32px;">Three steps to go from zero to pooling — works identically in Blueprint and C++.</p>
+    <p class="muted" style="margin-bottom:32px;">Three steps to go from zero to pooling, works identically in Blueprint and C++.</p>
 
     <div class="steps">
 
@@ -580,9 +580,9 @@
         <div class="step-num">1</div>
         <div class="step-content">
           <h3>Register the pool</h3>
-          <p class="muted">Call this once — at level start, in a Game Mode, or a Begin Play event. Subsequent calls with the same class/tag are safe no-ops.</p>
+          <p class="muted">Call this once, at level start, in a Game Mode, or a Begin Play event. Subsequent calls with the same class/tag are safe no-ops.</p>
           <p class="muted" style="font-size:0.82rem;">Blueprint node: <code>UltraPool Register Pool</code></p>
-          <pre><code><span class="cm">// C++ — call from BeginPlay or Initialize</span>
+          <pre><code><span class="cm">// C++: call from BeginPlay or Initialize</span>
 <span class="ty">UUltraPoolSubsystem</span>* Pool = <span class="ty">UUltraPoolSubsystem</span>::<span class="fn">Get</span>(<span class="kw">this</span>);
 
 <span class="ty">FPoolConfig</span> Config;
@@ -602,20 +602,20 @@ Config.PoolTag              = <span class="str">FName("Bullet")</span>;
         <div class="step-num">2</div>
         <div class="step-content">
           <h3>Acquire an actor</h3>
-          <p class="muted">The actor is unhidden, teleported to your transform, and ready to use. Always check <code>bSuccess</code> — Fixed-policy pools can be exhausted.</p>
+          <p class="muted">The actor is unhidden, teleported to your transform, and ready to use. Always check <code>bSuccess</code>. Fixed-policy pools can be exhausted.</p>
           <p class="muted" style="font-size:0.82rem;">Blueprint node: <code>UltraPool Acquire</code> &nbsp;/&nbsp; <code>UltraPool Acquire By Tag</code></p>
           <pre><code><span class="kw">bool</span>  bSuccess;
 <span class="ty">AActor</span>* BulletActor;
 
 <span class="ty">FPooledActorHandle</span> Handle = Pool-&gt;<span class="fn">AcquireActor</span>(PoolID, MuzzleTransform);
 
-<span class="cm">// Or by tag — no PoolID needed</span>
+<span class="cm">// Or by tag (no PoolID needed)</span>
 Handle = Pool-&gt;<span class="fn">AcquireActorByTag</span>(<span class="str">FName("Bullet")</span>, MuzzleTransform);
 
 <span class="kw">if</span> (Handle.<span class="fn">IsValidHandle</span>())
 {
     BulletActor = Pool-&gt;<span class="fn">GetActorFromHandle</span>(Handle);
-    <span class="cm">// BulletActor is live and visible — treat it like a freshly spawned actor</span>
+    <span class="cm">// BulletActor is live and visible, treat it like a freshly spawned actor</span>
 }</code></pre>
         </div>
       </div>
@@ -625,12 +625,12 @@ Handle = Pool-&gt;<span class="fn">AcquireActorByTag</span>(<span class="str">FN
         <div class="step-num">3</div>
         <div class="step-content">
           <h3>Return the actor</h3>
-          <p class="muted">The actor is hidden, collision disabled, and moved below the world — ready for the next caller.</p>
+          <p class="muted">The actor is hidden, collision disabled, and moved below the world, ready for the next caller.</p>
           <p class="muted" style="font-size:0.82rem;">Blueprint node: <code>UltraPool Return</code></p>
-          <pre><code><span class="cm">// Always return via handle — O(1) and stale-safe</span>
+          <pre><code><span class="cm">// Always return via handle (O(1), stale-safe)</span>
 Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
 
-<span class="cm">// Handle is now stale — any further calls using it are safe no-ops</span></code></pre>
+<span class="cm">// Handle is now stale; any further calls using it are safe no-ops</span></code></pre>
 
           <div class="pitfall warn mt-16" style="margin-top:16px;">
             <div class="pitfall-icon">&#9888;</div>
@@ -650,7 +650,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
 <section id="architecture">
   <div class="container">
     <h2>Architecture</h2>
-    <p class="muted" style="margin-bottom:28px;">UltraPool is a <strong>UTickableWorldSubsystem</strong> — one instance per UWorld, created automatically, no manual lifecycle management needed.</p>
+    <p class="muted" style="margin-bottom:28px;">UltraPool is a <strong>UTickableWorldSubsystem</strong>: one instance per UWorld, created automatically, no manual lifecycle management needed.</p>
 
     <div class="arch-diagram">
 
@@ -727,7 +727,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
     <div class="two-col mt-32">
       <div class="card">
         <h3>FPooledActorHandle</h3>
-        <p>Lightweight value type (safe to store in Blueprint). Embeds <code>PoolID</code>, <code>ActorIndex</code>, and <code>Generation</code>. Stale handles (from returned actors) are automatically detected via the generation counter — all API calls with stale handles are silent no-ops.</p>
+        <p>Lightweight value type (safe to store in Blueprint). Embeds <code>PoolID</code>, <code>ActorIndex</code>, and <code>Generation</code>. Stale handles (from returned actors) are automatically detected via the generation counter. All API calls with stale handles are silent no-ops.</p>
       </div>
       <div class="card">
         <h3>Generation Counter</h3>
@@ -753,7 +753,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
         <div class="fn-row">
           <div>
             <div class="fn-sig"><span class="ty">int32</span> <span class="fn">RegisterPool</span>(<span class="ty">FPoolConfig</span> Config)</div>
-            <div class="fn-desc">Register an actor class for pooling. Idempotent — calling twice with the same class+tag returns the existing PoolID. Automatically warms up if <code>InitialSize &gt; 0</code>.</div>
+            <div class="fn-desc">Register an actor class for pooling. Idempotent: calling twice with the same class+tag returns the existing PoolID. Automatically warms up if <code>InitialSize &gt; 0</code>.</div>
           </div>
           <span class="fn-badge bp">Blueprint</span>
         </div>
@@ -801,7 +801,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
         <div class="fn-row">
           <div>
             <div class="fn-sig"><span class="ty">FPooledActorHandle</span> <span class="fn">AcquireActorByClass</span>(<span class="ty">TSubclassOf&lt;AActor&gt;</span>, <span class="kw">const</span> <span class="ty">FTransform</span>&amp;)</div>
-            <div class="fn-desc">Lookup by actor class. One extra map lookup vs AcquireActor — fine outside the hot path. Only matches pools registered without a tag.</div>
+            <div class="fn-desc">Lookup by actor class. One extra map lookup vs AcquireActor, fine outside the hot path. Only matches pools registered without a tag.</div>
           </div>
           <span class="fn-badge bp">Blueprint</span>
         </div>
@@ -825,7 +825,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
         <div class="fn-row">
           <div>
             <div class="fn-sig"><span class="kw">void</span> <span class="fn">ReturnActor</span>(<span class="ty">FPooledActorHandle</span> Handle)</div>
-            <div class="fn-desc">Return by handle — O(1), stale-safe. Preferred. Calls <code>OnReturnedToPool</code>, hides actor, increments generation.</div>
+            <div class="fn-desc">Return by handle (O(1), stale-safe). Preferred. Calls <code>OnReturnedToPool</code>, hides actor, increments generation.</div>
           </div>
           <span class="fn-badge bp">Blueprint</span>
         </div>
@@ -833,7 +833,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
         <div class="fn-row">
           <div>
             <div class="fn-sig"><span class="kw">void</span> <span class="fn">ReturnActorByPointer</span>(<span class="ty">AActor</span>* Actor)</div>
-            <div class="fn-desc">Return using a direct pointer (two map lookups). Use when you don't have the handle available — e.g. from a collision event callback.</div>
+            <div class="fn-desc">Return using a direct pointer (two map lookups). Use when you don't have the handle available, e.g. from a collision event callback.</div>
           </div>
           <span class="fn-badge bp">Blueprint</span>
         </div>
@@ -913,7 +913,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
         <div class="fn-row">
           <div>
             <div class="fn-sig"><span class="kw">bool</span> <span class="fn">IsHandleValid</span>(<span class="ty">FPooledActorHandle</span> Handle)</div>
-            <div class="fn-desc">Full validation: checks the handle flag, pool existence, slot bounds, and generation match. Pure — no world context needed.</div>
+            <div class="fn-desc">Full validation: checks the handle flag, pool existence, slot bounds, and generation match. Pure, no world context needed.</div>
           </div>
           <span class="fn-badge bp">Blueprint</span>
         </div>
@@ -952,7 +952,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
           <tr>
             <td><code>ActorClass</code></td>
             <td><code>TSubclassOf&lt;AActor&gt;</code></td>
-            <td class="muted">—</td>
+            <td class="muted">-</td>
             <td>The actor class this pool manages. Required.</td>
           </tr>
           <tr>
@@ -1045,7 +1045,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
     <h2>IPoolableInterface</h2>
     <p class="muted" style="margin-bottom:20px;">
       An optional Blueprint/C++ interface your actor can implement to hook into pool lifecycle events.
-      It is never required — any <code>AActor</code> subclass can be pooled without modification.
+      It is never required. Any <code>AActor</code> subclass can be pooled without modification.
     </p>
 
     <div class="table-wrap">
@@ -1075,7 +1075,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
           </tr>
           <tr>
             <td><code>CanBeReclaimed</code></td>
-            <td>—</td>
+            <td>-</td>
             <td>Return <code>false</code> to prevent forced reclaim (e.g. actor is mid-cutscene or in a critical gameplay moment). Default: <code>true</code>.</td>
           </tr>
         </tbody>
@@ -1124,7 +1124,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
       <div class="card">
         <div class="tag">OnDemand</div>
         <h3>On Demand</h3>
-        <p>Spawns exactly <strong>+1</strong> actor per miss. Predictable growth. Best general-purpose policy for most pools. Small per-miss hitch — acceptable in most scenarios.</p>
+        <p>Spawns exactly <strong>+1</strong> actor per miss. Predictable growth. Best general-purpose policy for most pools. Small per-miss hitch, acceptable in most scenarios.</p>
         <p style="font-size:0.8rem;margin-top:10px;color:var(--muted);">Spawn cost: <strong style="color:var(--warning);">1× on miss</strong></p>
       </div>
 
@@ -1138,7 +1138,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
       <div class="card">
         <div class="tag">Doubling</div>
         <h3>Doubling</h3>
-        <p>Doubles the pool size on each miss (<code>currentSize × 2</code>). Maximum throughput growth. Capped at 10,000 actors. Use carefully — can cause large memory spikes.</p>
+        <p>Doubles the pool size on each miss (<code>currentSize × 2</code>). Maximum throughput growth. Capped at 10,000 actors. Use carefully, it can cause large memory spikes.</p>
         <p style="font-size:0.8rem;margin-top:10px;color:var(--muted);">Spawn cost: <strong style="color:var(--danger);">2× current on miss</strong></p>
       </div>
 
@@ -1180,13 +1180,13 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
           <tr>
             <td><code>LeastUsed</code></td>
             <td>Lowest AcquireCount wins</td>
-            <td>Wear leveling — spreads usage evenly across all actors. Useful when per-actor state accumulates over time (e.g. mesh damage decals).</td>
+            <td>Wear leveling: spreads usage evenly across all actors. Useful when per-actor state accumulates over time (e.g. mesh damage decals).</td>
             <td>O(N free)</td>
           </tr>
           <tr>
             <td><code>MostUsed</code></td>
             <td>Highest AcquireCount wins</td>
-            <td>Hot-cache bias — keeps the same actors cycling through repeatedly. Best when initialization is expensive and you want a warm subset.</td>
+            <td>Hot-cache bias: keeps the same actors cycling through repeatedly. Best when initialization is expensive and you want a warm subset.</td>
             <td>O(N free)</td>
           </tr>
         </tbody>
@@ -1221,8 +1221,8 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
       <div class="pitfall info">
         <div class="pitfall-icon">&#8505;</div>
         <div class="pitfall-body">
-          <h4>Returned actors stay visible in the World Outliner — that's normal</h4>
-          <p>Pooled actors are never removed from the World. They are hidden (<code>bHidden = true</code>), moved far below the level, and have their collision and tick disabled. They will appear in the Outliner with names like <code>BP_Bullet_C_0</code>. This is by design — the whole point of pooling is to avoid the cost of creation and destruction.</p>
+          <h4>Returned actors stay visible in the World Outliner (expected behavior)</h4>
+          <p>Pooled actors are never removed from the World. They are hidden (<code>bHidden = true</code>), moved far below the level, and have their collision and tick disabled. They will appear in the Outliner with names like <code>BP_Bullet_C_0</code>. This is by design: the whole point of pooling is to avoid the cost of creation and destruction.</p>
         </div>
       </div>
 
@@ -1230,7 +1230,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
         <div class="pitfall-icon">&#9888;</div>
         <div class="pitfall-body">
           <h4><code>bAutoReturnOnLeaseExpiry</code> is <code>true</code> by default</h4>
-          <p>If you set a <code>DefaultLeaseDuration</code>, the subsystem will automatically call <code>ReturnActor</code> when the time expires — even if the actor is still visible. If your gameplay logic needs to extend the lease, call <code>ExtendLease(Handle, ExtraSeconds)</code> before expiry. To disable auto-return entirely, set <code>bAutoReturnOnLeaseExpiry = false</code> in the config.</p>
+          <p>If you set a <code>DefaultLeaseDuration</code>, the subsystem will automatically call <code>ReturnActor</code> when the time expires, even if the actor is still visible. If your gameplay logic needs to extend the lease, call <code>ExtendLease(Handle, ExtraSeconds)</code> before expiry. To disable auto-return entirely, set <code>bAutoReturnOnLeaseExpiry = false</code> in the config.</p>
         </div>
       </div>
 
@@ -1238,7 +1238,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
         <div class="pitfall-icon">&#9888;</div>
         <div class="pitfall-body">
           <h4>Do not store raw <code>AActor*</code> pointers from a pooled actor across frames</h4>
-          <p>The pool reuses actor pointers. If you cache <code>MyBullet = AcquiredActor</code> and the lease expires and the slot is given to another caller, your pointer still points to a valid actor — but a different one. Always validate via <code>IsHandleValid(Handle)</code> and resolve with <code>GetActorFromHandle(Handle)</code> when needed across frames.</p>
+          <p>The pool reuses actor pointers. If you cache <code>MyBullet = AcquiredActor</code> and the lease expires and the slot is given to another caller, your pointer still points to a valid actor, but a different one. Always validate via <code>IsHandleValid(Handle)</code> and resolve with <code>GetActorFromHandle(Handle)</code> when needed across frames.</p>
         </div>
       </div>
 
@@ -1246,7 +1246,7 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
         <div class="pitfall-icon">&#8505;</div>
         <div class="pitfall-body">
           <h4>Blueprint Construction Scripts reset <code>bHidden</code></h4>
-          <p>UltraPool calls <code>SetActorHiddenInGame(true)</code> <em>after</em> <code>FinishSpawning</code> for exactly this reason. If your Blueprint actor's Construction Script explicitly sets <code>Hidden in Game = false</code>, UltraPool's post-spawn call will correctly override it. Do <em>not</em> call <code>SetActorHiddenInGame</code> inside the Construction Script — use <code>OnPoolWarmup</code> instead.</p>
+          <p>UltraPool calls <code>SetActorHiddenInGame(true)</code> <em>after</em> <code>FinishSpawning</code> for exactly this reason. If your Blueprint actor's Construction Script explicitly sets <code>Hidden in Game = false</code>, UltraPool's post-spawn call will correctly override it. Do <em>not</em> call <code>SetActorHiddenInGame</code> inside the Construction Script. Use <code>OnPoolWarmup</code> instead.</p>
         </div>
       </div>
 
@@ -1258,11 +1258,11 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
 <section id="tutorials">
   <div class="container">
     <h2>Tutorials</h2>
-    <p class="muted" style="margin-bottom:32px;">Two full walkthroughs — same example in both: a gun that fires pooled projectiles. Pick your path.</p>
+    <p class="muted" style="margin-bottom:32px;">Two full walkthroughs covering the same example: a gun that fires pooled projectiles. Pick your path.</p>
 
     <!-- ── Blueprint ── -->
     <details open>
-      <summary>Blueprint — Pooled projectile from scratch</summary>
+      <summary>Blueprint: Pooled projectile from scratch</summary>
       <div class="details-body">
         <div class="steps" style="margin-top:20px;">
 
@@ -1270,12 +1270,12 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
             <div class="step-num">1</div>
             <div class="step-content">
               <h3>Create your pooled actor</h3>
-              <p class="muted">Create a new Blueprint Actor — <code>BP_PooledProjectile</code>. Add a Static Mesh, a Sphere Collision, and optionally a Niagara component for a trail effect. No Projectile Movement Component required if you handle movement in Tick.</p>
+              <p class="muted">Create a new Blueprint Actor (<code>BP_PooledProjectile</code>). Add a Static Mesh, a Sphere Collision, and optionally a Niagara component for a trail effect. No Projectile Movement Component required if you handle movement in Tick.</p>
               <div class="pitfall info mt-16">
                 <div class="pitfall-icon">&#8505;</div>
                 <div class="pitfall-body">
                   <h4>Don't initialize state in BeginPlay</h4>
-                  <p>BeginPlay fires exactly once — at warmup, when the pool is created. Everything that needs to reset between uses (velocity, health, VFX…) goes in <code>OnAcquiredFromPool</code>, not BeginPlay.</p>
+                  <p>BeginPlay fires exactly once, at warmup, when the pool is created. Everything that needs to reset between uses (velocity, health, VFX…) goes in <code>OnAcquiredFromPool</code>, not BeginPlay.</p>
                 </div>
               </div>
             </div>
@@ -1285,12 +1285,12 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
             <div class="step-num">2</div>
             <div class="step-content">
               <h3>Implement IPoolableInterface</h3>
-              <p class="muted">Open <code>BP_PooledProjectile</code> → <strong>Class Settings</strong> → <strong>Interfaces</strong> → click <strong>Add</strong> → search for <strong>PoolableInterface</strong>. The two events appear under <strong>My Blueprint → Interfaces</strong>. To implement one, <strong>double-click its name</strong> — this opens a new event graph node you can wire up. Implement both:</p>
+              <p class="muted">Open <code>BP_PooledProjectile</code> → <strong>Class Settings</strong> → <strong>Interfaces</strong> → click <strong>Add</strong> → search for <strong>PoolableInterface</strong>. The two events appear under <strong>My Blueprint → Interfaces</strong>. To implement one, <strong>double-click its name</strong>: this opens a new event graph node you can wire up. Implement both:</p>
               <pre><code>Event OnAcquiredFromPool (Handle)
   → Activate(true) on your Niagara component        ← bReset = true, or trail won't restart
   → Reset bIsAlive, damage counter, etc.
   → Launch: Set Velocity = Get Actor Forward Vector * Speed
-            ↑ no cast needed — the gun already set the right rotation via SpawnTransform
+            ↑ no cast needed, the gun already set the right rotation via SpawnTransform
   → Save Handle to a variable                       ← needed for Option B (manual return)
 
 Event OnReturnedToPool (Reason)
@@ -1317,11 +1317,11 @@ Event OnReturnedToPool (Reason)
 → Right-click the return value (PoolID) → Promote to variable → name it "BulletPoolID"</code></pre>
               <figure class="bp-screenshot">
                 <img src="img/UltraPool_MakeConfig.png" alt="UltraPool Make Config Blueprint node" loading="lazy" />
-                <figcaption>UltraPool Make Config — parameters used in this tutorial</figcaption>
+                <figcaption>UltraPool Make Config: parameters used in this tutorial</figcaption>
               </figure>
               <figure class="bp-screenshot" style="margin-top:10px;">
                 <img src="img/UltraPool_Register.png" alt="UltraPool Register Pool Blueprint node" loading="lazy" />
-                <figcaption>UltraPool Register Pool — call once in BeginPlay, store the PoolID</figcaption>
+                <figcaption>UltraPool Register Pool: call once in BeginPlay, store the PoolID</figcaption>
               </figure>
               <div class="pitfall info mt-16">
                 <div class="pitfall-icon">&#8505;</div>
@@ -1337,25 +1337,25 @@ Event OnReturnedToPool (Reason)
             <div class="step-num">4</div>
             <div class="step-content">
               <h3>Acquire on fire</h3>
-              <p class="muted">In your <strong>Fire</strong> input event — use the PoolID stored in step 3:</p>
+              <p class="muted">In your <strong>Fire</strong> input event, use the PoolID stored in step 3:</p>
               <pre><code>UltraPool Acquire
   Pool ID          → BulletPoolID  (the variable from step 3)
   Spawn Transform  → Get Socket Transform (Muzzle socket)
-                     ↑ rotation included — the projectile reads it in OnAcquiredFromPool
+                     ↑ rotation included, the projectile reads it in OnAcquiredFromPool
 
 → Branch on bSuccess
    True  → done. OnAcquiredFromPool fires automatically on the actor.
-   False → only happens with Fixed policy — safe to ignore here (OnDemand never misses)</code></pre>
+   False → only happens with Fixed policy, safe to ignore here (OnDemand never misses)</code></pre>
               <figure class="bp-screenshot">
                 <img src="img/UltraPool_Acquire.png" alt="UltraPool Acquire Blueprint node" loading="lazy" />
-                <figcaption>UltraPool Acquire — fastest path, direct PoolID lookup</figcaption>
+                <figcaption>UltraPool Acquire: fastest path, direct PoolID lookup</figcaption>
               </figure>
               <div class="pitfall info mt-16">
                 <div class="pitfall-icon">&#8505;</div>
                 <div class="pitfall-body">
                   <h4>No cast needed</h4>
-                  <p>Don't cast <code>OutActor</code> to <code>BP_PooledProjectile</code> to call a Launch function — that creates a hard reference and is unnecessary. Instead, pass the correct <strong>Spawn Transform</strong> (position + rotation toward the target) and let the projectile launch itself inside <code>OnAcquiredFromPool</code> using <code>Get Actor Forward Vector</code>. The gun says <em>where</em> and <em>which direction</em> — the actor does the rest.</p>
-                  <p style="margin-top:8px;">Need to pass extra data (damage, speed)? Expose them as variables on the interface and set them before calling Acquire — still no cast required.</p>
+                  <p>Don't cast <code>OutActor</code> to <code>BP_PooledProjectile</code> to call a Launch function, as that creates a hard reference and is unnecessary. Instead, pass the correct <strong>Spawn Transform</strong> (position + rotation toward the target) and let the projectile launch itself inside <code>OnAcquiredFromPool</code> using <code>Get Actor Forward Vector</code>. The gun says <em>where</em> and <em>which direction</em>, the actor does the rest.</p>
+                  <p style="margin-top:8px;">Need to pass extra data (damage, speed)? Expose them as variables on the interface and set them before calling Acquire (no cast required).</p>
                 </div>
               </div>
             </div>
@@ -1365,23 +1365,23 @@ Event OnReturnedToPool (Reason)
             <div class="step-num">5</div>
             <div class="step-content">
               <h3>Return the actor</h3>
-              <p class="muted">Two options — you can use both at the same time:</p>
-              <pre><code>Option A — Automatic (set and forget)
+              <p class="muted">Two options (you can use both at the same time):</p>
+              <pre><code>Option A: Automatic (set and forget)
   DefaultLeaseDuration = 2.0 + bAutoReturnOnLeaseExpiry = true (default)
   → Nothing to wire. The subsystem returns the actor after 2 s automatically.
 
-Option B — On hit (manual, for immediate return)
+Option B: On hit (manual, for immediate return)
   In BP_PooledProjectile → Event Hit (or On Component Hit):
     UltraPool Return  → plug in the Handle saved in step 2</code></pre>
               <figure class="bp-screenshot">
                 <img src="img/UltraPool_Return.png" alt="UltraPool Return Blueprint node" loading="lazy" />
-                <figcaption>UltraPool Return — always prefer the handle over the pointer</figcaption>
+                <figcaption>UltraPool Return: always prefer the handle over the pointer</figcaption>
               </figure>
               <div class="pitfall info mt-16">
                 <div class="pitfall-icon">&#8505;</div>
                 <div class="pitfall-body">
                   <h4>Using both options together</h4>
-                  <p>The safest setup: return manually on hit (Option B) <em>and</em> keep <code>DefaultLeaseDuration</code> as a fallback for bullets that never hit anything. If the lease expires after a manual return already happened, the second return is silently ignored — no crash, no double-free.</p>
+                  <p>The safest setup: return manually on hit (Option B) <em>and</em> keep <code>DefaultLeaseDuration</code> as a fallback for bullets that never hit anything. If the lease expires after a manual return already happened, the second return is silently ignored: no crash, no double-free.</p>
                 </div>
               </div>
             </div>
@@ -1393,7 +1393,7 @@ Option B — On hit (manual, for immediate return)
 
     <!-- ── C++ ── -->
     <details>
-      <summary>C++ — Pooled projectile from scratch</summary>
+      <summary>C++: Pooled projectile from scratch</summary>
       <div class="details-body">
         <div class="steps" style="margin-top:20px;">
 
@@ -1435,7 +1435,7 @@ Option B — On hit (manual, for immediate return)
 <span class="kw">void</span> <span class="ty">ABullet</span>::<span class="fn">OnAcquiredFromPool_Implementation</span>(<span class="ty">FPooledActorHandle</span> Handle)
 {
     MyHandle = Handle;                          <span class="cm">// cache for manual return</span>
-    TrailFX-&gt;<span class="fn">Activate</span>(<span class="kw">true</span>);                  <span class="cm">// restart VFX — bReset = true</span>
+    TrailFX-&gt;<span class="fn">Activate</span>(<span class="kw">true</span>);                  <span class="cm">// restart VFX (bReset = true)</span>
     ProjectileMovement-&gt;Velocity = <span class="ty">FVector</span>::ZeroVector;
 }
 
@@ -1462,7 +1462,7 @@ Option B — On hit (manual, for immediate return)
 
 <span class="kw">private</span>:
     <span class="ty">int32</span> BulletPoolID = <span class="num">-1</span>;</code></pre>
-              <pre><code><span class="cm">// UShooterComponent.cpp — BeginPlay</span>
+              <pre><code><span class="cm">// UShooterComponent.cpp | BeginPlay</span>
 <span class="kw">void</span> <span class="ty">UShooterComponent</span>::<span class="fn">BeginPlay</span>()
 {
     Super::<span class="fn">BeginPlay</span>();
@@ -1503,7 +1503,7 @@ Option B — On hit (manual, for immediate return)
                 <div class="pitfall-icon">&#8505;</div>
                 <div class="pitfall-body">
                   <h4>Cache BulletPoolID at startup</h4>
-                  <p>Computing the PoolID from class + tag has a small lookup cost. Store it as a member variable and reuse it every shot — this is the fastest acquire path.</p>
+                  <p>Computing the PoolID from class + tag has a small lookup cost. Store it as a member variable and reuse it every shot: this is the fastest acquire path.</p>
                 </div>
               </div>
             </div>
@@ -1520,8 +1520,8 @@ Option B — On hit (manual, for immediate return)
 <footer>
   <div class="container">
     <p style="margin-bottom:8px;">
-      <strong style="color:var(--accent);">UltraPool</strong> &nbsp;&mdash;&nbsp;
-      Copyright &copy; 2025 Théo de Nanassy. All rights reserved.
+      <strong style="color:var(--accent);">UltraPool</strong> &nbsp;&bull;&nbsp;
+      Copyright &copy; 2026 Théo de Nanassy. All rights reserved.
     </p>
     <p>
       Distributed via <a href="https://www.fab.com" target="_blank">Fab</a>.
