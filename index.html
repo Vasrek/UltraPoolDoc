@@ -1285,8 +1285,19 @@ Pool-&gt;<span class="fn">ReturnActor</span>(Handle);
             <div class="step-num">2</div>
             <div class="step-content">
               <h3>Implement IPoolableInterface</h3>
-              <p class="muted">Open <code>BP_PooledProjectile</code> → <strong>Class Settings</strong> → <strong>Interfaces</strong> → click <strong>Add</strong> → search for <strong>PoolableInterface</strong>. The two events appear under <strong>My Blueprint → Interfaces</strong>. To implement one, <strong>double-click its name</strong>: this opens a new event graph node you can wire up. Implement both:</p>
-              <pre><code>Event OnAcquiredFromPool (Handle)
+              <p class="muted">Open <code>BP_PooledProjectile</code> → <strong>Class Settings</strong> → <strong>Interfaces</strong> → click <strong>Add</strong> → search for <strong>PoolableInterface</strong>. The three events appear under <strong>My Blueprint → Interfaces</strong>. To implement one, <strong>double-click its name</strong>: this opens a new event graph node you can wire up.</p>
+              <figure class="bp-screenshot" style="margin-top:16px;margin-bottom:16px;">
+                <img src="img/UltraPool_InterfaceImplementation.png" alt="IPoolableInterface — Blueprint implementation showing OnAcquiredFromPool, OnPoolWarmup and OnReturnedToPool event nodes" loading="lazy" />
+                <figcaption>IPoolableInterface in Blueprint — the three lifecycle events after double-clicking each one in the Interfaces panel</figcaption>
+              </figure>
+              <p class="muted">Implement all three events:</p>
+              <pre><code>Event OnPoolWarmup
+  → Called once at initial spawn, before any lease
+  → Cache component references (Niagara, Audio, Mesh…)
+  → Initialize variables that never change between uses (bIsAlive = false, etc.)
+  → Do NOT start motion or VFX here — that belongs in OnAcquiredFromPool
+
+Event OnAcquiredFromPool (Handle)
   → Activate(true) on your Niagara component        ← bReset = true, or trail won't restart
   → Reset bIsAlive, damage counter, etc.
   → Launch: Set Velocity = Get Actor Forward Vector * Speed
